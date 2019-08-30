@@ -10,7 +10,6 @@ import org.jetbrains.kotlin.resolve.calls.inference.NewConstraintSystem
 import org.jetbrains.kotlin.resolve.calls.inference.addSubtypeConstraintIfCompatible
 import org.jetbrains.kotlin.resolve.calls.inference.components.KotlinConstraintSystemCompleter
 import org.jetbrains.kotlin.resolve.calls.inference.components.KotlinConstraintSystemCompleter.ConstraintSystemCompletionMode
-import org.jetbrains.kotlin.resolve.calls.inference.model.Constraint
 import org.jetbrains.kotlin.resolve.calls.inference.model.ConstraintStorage.Empty.hasContradiction
 import org.jetbrains.kotlin.resolve.calls.inference.model.ExpectedTypeConstraintPosition
 import org.jetbrains.kotlin.resolve.calls.model.*
@@ -20,7 +19,6 @@ import org.jetbrains.kotlin.types.ErrorUtils
 import org.jetbrains.kotlin.types.TypeUtils
 import org.jetbrains.kotlin.types.UnwrappedType
 import org.jetbrains.kotlin.types.model.TypeSystemInferenceExtensionContext
-import org.jetbrains.kotlin.types.model.defaultType
 import org.jetbrains.kotlin.types.model.isIntegerLiteralTypeConstructor
 import org.jetbrains.kotlin.types.model.typeConstructor
 import org.jetbrains.kotlin.types.typeUtil.contains
@@ -161,7 +159,7 @@ class KotlinCallCompleter(
 
         when {
             csBuilder.currentStorage().notFixedTypeVariables.isEmpty() -> {
-                // This is needed to avoid multiple mismatch errors as we type check resulting type against expected one later
+                // Also, this is needed to avoid multiple mismatch errors as we type check resulting type against expected one later
                 // Plus, it helps with IDE-tests where it's important to have particular diagnostics.
                 // Note that it aligns with the old inference, see CallCompleter.completeResolvedCallAndArguments
                 return
@@ -171,12 +169,6 @@ class KotlinCallCompleter(
                 csBuilder.addSubtypeConstraintIfCompatible(
                     returnType, csBuilder.builtIns.unitType, ExpectedTypeConstraintPosition(resolvedCall.atom)
                 )
-
-            resolutionCallbacks.isCompileTimeConstant(resolvedCall, expectedType) -> {
-                // We don't add expected type constraint for constant expression like "1 + 1" because of type coercion for numbers:
-                // val a: Long = 1 + 1, note that result type of "1 + 1" will be Int and adding constraint with Long will produce type mismatch
-                return
-            }
 
             else ->
                 csBuilder.addSubtypeConstraint(returnType, expectedType, ExpectedTypeConstraintPosition(resolvedCall.atom))
