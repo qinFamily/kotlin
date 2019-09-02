@@ -16,11 +16,10 @@
 
 package org.jetbrains.kotlin.idea.search.ideaExtensions
 
+import com.intellij.lang.java.JavaLanguage
 import com.intellij.openapi.progress.ProgressManager
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiReference
-import com.intellij.psi.PsiReferenceService
-import com.intellij.psi.ReferenceRange
+import com.intellij.psi.*
+import com.intellij.psi.impl.search.LowLevelSearchUtil
 import com.intellij.psi.search.RequestResultProcessor
 import com.intellij.util.Processor
 import org.jetbrains.kotlin.descriptors.CallableDescriptor
@@ -31,6 +30,7 @@ import org.jetbrains.kotlin.idea.search.usagesSearch.isUsageInContainingDeclarat
 import org.jetbrains.kotlin.idea.search.usagesSearch.toDescriptor
 import org.jetbrains.kotlin.psi.KtDestructuringDeclaration
 import org.jetbrains.kotlin.psi.KtNamedDeclaration
+import org.jetbrains.kotlin.psi.KtParameter
 
 class KotlinRequestResultProcessor(
     private val unwrappedElement: PsiElement,
@@ -44,6 +44,9 @@ class KotlinRequestResultProcessor(
     }
 
     override fun processTextOccurrence(element: PsiElement, offsetInElement: Int, consumer: Processor<in PsiReference>): Boolean {
+        if ((unwrappedElement is KtParameter || unwrappedElement is PsiParameter) && element.language == JavaLanguage.INSTANCE) {
+            return true
+        }
         val references = if (element is KtDestructuringDeclaration)
             element.entries.flatMap { referenceService.getReferences(it, PsiReferenceService.Hints.NO_HINTS) }
         else
