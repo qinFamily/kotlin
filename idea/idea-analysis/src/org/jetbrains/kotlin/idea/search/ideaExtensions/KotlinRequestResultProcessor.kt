@@ -23,10 +23,12 @@ import com.intellij.psi.PsiReferenceService
 import com.intellij.psi.ReferenceRange
 import com.intellij.psi.search.RequestResultProcessor
 import com.intellij.util.Processor
+import org.jetbrains.kotlin.descriptors.CallableDescriptor
 import org.jetbrains.kotlin.idea.references.KtDestructuringDeclarationReference
 import org.jetbrains.kotlin.idea.search.usagesSearch.isCallableOverrideUsage
 import org.jetbrains.kotlin.idea.search.usagesSearch.isExtensionOfDeclarationClassUsage
 import org.jetbrains.kotlin.idea.search.usagesSearch.isUsageInContainingDeclaration
+import org.jetbrains.kotlin.idea.search.usagesSearch.toDescriptor
 import org.jetbrains.kotlin.psi.KtDestructuringDeclaration
 import org.jetbrains.kotlin.psi.KtNamedDeclaration
 
@@ -37,6 +39,9 @@ class KotlinRequestResultProcessor(
     private val options: KotlinReferencesSearchOptions = KotlinReferencesSearchOptions.Empty
 ) : RequestResultProcessor(unwrappedElement, originalElement, filter, options) {
     private val referenceService = PsiReferenceService.getService()
+    private val descriptor: CallableDescriptor? by lazy {
+        if (originalElement is KtNamedDeclaration) toDescriptor(originalElement) else null
+    }
 
     override fun processTextOccurrence(element: PsiElement, offsetInElement: Int, consumer: Processor<in PsiReference>): Boolean {
         val references = if (element is KtDestructuringDeclaration)
@@ -64,7 +69,7 @@ class KotlinRequestResultProcessor(
             return true
         }
         if (originalElement is KtNamedDeclaration) {
-            if (options.acceptCallableOverrides && isCallableOverrideUsage(originalElement)) {
+            if (options.acceptCallableOverrides && isCallableOverrideUsage(originalElement, descriptor)) {
                 return true
             }
             if (options.acceptOverloads && isUsageInContainingDeclaration(originalElement)) {
