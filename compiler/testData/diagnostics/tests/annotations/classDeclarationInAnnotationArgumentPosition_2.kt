@@ -1,0 +1,3 @@
+@Target(AnnotationTarget.FIELD,
+<!DECLARATION_IN_ILLEGAL_CONTEXT, LOCAL_ANNOTATION_CLASS_ERROR!><!ANNOTATION_USED_AS_ANNOTATION_ARGUMENT!>@Retention(AnnotationRetention.RUNTIME)<!>
+annotation class SomeAnn<!SYNTAX, SYNTAX!><!><!>

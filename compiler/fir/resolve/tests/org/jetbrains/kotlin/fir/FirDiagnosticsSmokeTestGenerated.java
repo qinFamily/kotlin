@@ -856,6 +856,16 @@ public class FirDiagnosticsSmokeTestGenerated extends AbstractFirDiagnosticsSmok
             runTest("compiler/testData/diagnostics/tests/annotations/blockLevelOnTheSameLineWarning.kt");
         }
 
+        @TestMetadata("classDeclarationInAnnotationArgumentPosition_1.kt")
+        public void testClassDeclarationInAnnotationArgumentPosition_1() throws Exception {
+            runTest("compiler/testData/diagnostics/tests/annotations/classDeclarationInAnnotationArgumentPosition_1.kt");
+        }
+
+        @TestMetadata("classDeclarationInAnnotationArgumentPosition_2.kt")
+        public void testClassDeclarationInAnnotationArgumentPosition_2() throws Exception {
+            runTest("compiler/testData/diagnostics/tests/annotations/classDeclarationInAnnotationArgumentPosition_2.kt");
+        }
+
         @TestMetadata("ConstructorCall.kt")
         public void testConstructorCall() throws Exception {
             runTest("compiler/testData/diagnostics/tests/annotations/ConstructorCall.kt");
@@ -1019,6 +1029,11 @@ public class FirDiagnosticsSmokeTestGenerated extends AbstractFirDiagnosticsSmok
         @TestMetadata("onMultiDeclaration.kt")
         public void testOnMultiDeclaration() throws Exception {
             runTest("compiler/testData/diagnostics/tests/annotations/onMultiDeclaration.kt");
+        }
+
+        @TestMetadata("parsingOfJavaLikeAnnotationDeclaration.kt")
+        public void testParsingOfJavaLikeAnnotationDeclaration() throws Exception {
+            runTest("compiler/testData/diagnostics/tests/annotations/parsingOfJavaLikeAnnotationDeclaration.kt");
         }
 
         @TestMetadata("RecursivelyAnnotated.kt")

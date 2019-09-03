@@ -84,7 +84,7 @@ class LazyAnnotationDescriptor(
     override val source = annotationEntry.toSourceElement()
 
     private val scope = if (c.scope.ownerDescriptor is PackageFragmentDescriptor) {
-        LexicalScope.Base(c.scope, FileDescriptorForVisibilityChecks(source, c.scope.ownerDescriptor))
+        LexicalScope.Base(c.scope, FileDescriptorForAnnotationArgumentsVisibilityChecks(source, c.scope.ownerDescriptor))
     } else {
         c.scope
     }
@@ -108,7 +108,7 @@ class LazyAnnotationDescriptor(
         allValueArguments
     }
 
-    private class FileDescriptorForVisibilityChecks(
+    class FileDescriptorForAnnotationArgumentsVisibilityChecks(
         private val source: SourceElement,
         private val containingDeclaration: DeclarationDescriptor
     ) : DeclarationDescriptorWithSource {

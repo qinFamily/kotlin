@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.incremental.components.NoLookupLocation
 import org.jetbrains.kotlin.name.FqNameUnsafe
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.descriptorUtil.platform
+import org.jetbrains.kotlin.resolve.lazy.descriptors.LazyAnnotationDescriptor
 
 import org.jetbrains.kotlin.resolve.scopes.MemberScope
 import java.util.*
@@ -63,7 +64,8 @@ class OverloadResolver(
                 constructorsByOuterClass.putValues(containingDeclaration, klass.constructors)
             } else if (!(containingDeclaration is FunctionDescriptor ||
                         containingDeclaration is PropertyDescriptor ||
-                        containingDeclaration is PackageFragmentDescriptor)) {
+                        containingDeclaration is PackageFragmentDescriptor ||
+                        containingDeclaration is LazyAnnotationDescriptor.FileDescriptorForAnnotationArgumentsVisibilityChecks)) {
                 throw IllegalStateException("Illegal class container: " + containingDeclaration)
             }
         }
