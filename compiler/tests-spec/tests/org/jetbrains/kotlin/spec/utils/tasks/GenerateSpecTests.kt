@@ -9,12 +9,12 @@ import org.jetbrains.kotlin.generators.tests.generator.testGroup
 import org.jetbrains.kotlin.spec.checkers.AbstractDiagnosticsTestSpec
 import org.jetbrains.kotlin.spec.codegen.AbstractBlackBoxCodegenTestSpec
 import org.jetbrains.kotlin.spec.parsing.AbstractParsingTestSpec
-import org.jetbrains.kotlin.spec.utils.GeneralConfiguration.TESTDATA_PATH
-import org.jetbrains.kotlin.spec.utils.GeneralConfiguration.TEST_PATH
+import org.jetbrains.kotlin.spec.utils.GeneralConfiguration.SPEC_TESTDATA_PATH
+import org.jetbrains.kotlin.spec.utils.GeneralConfiguration.SPEC_TEST_PATH
 import org.jetbrains.kotlin.spec.utils.TestsJsonMapGenerator
 
 fun generateTests() {
-    testGroup(TEST_PATH, TESTDATA_PATH) {
+    testGroup(SPEC_TEST_PATH, SPEC_TESTDATA_PATH) {
         testClass<AbstractDiagnosticsTestSpec> {
             model("diagnostics", excludeDirs = listOf("helpers"))
         }

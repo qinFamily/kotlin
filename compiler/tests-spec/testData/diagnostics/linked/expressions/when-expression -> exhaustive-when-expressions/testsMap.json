@@ -1,0 +1,22 @@
+{
+  "1": {
+    "neg": {
+      "1": [
+        {
+          "specVersion": "0.1-155",
+          "casesNumber": 0,
+          "description": "Branch bypass val",
+          "path": "compiler/testData/diagnostics/tests/when/BranchBypassVal.kt",
+          "unexpectedBehaviour": false
+        },
+        {
+          "specVersion": "0.1-155",
+          "casesNumber": 0,
+          "description": "Branch bypass var",
+          "path": "compiler/testData/diagnostics/tests/when/BranchBypassVar.kt",
+          "unexpectedBehaviour": false
+        }
+      ]
+    }
+  }
+}
