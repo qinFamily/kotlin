@@ -488,6 +488,21 @@ open class KotlinNativeLink : AbstractKotlinNativeCompile<KotlinCommonToolOption
             add("-Xexport-library=${it.absolutePath}")
         }
         addKey("-Xstatic-framework", isStaticFramework)
+
+        // Allow a user to force the old behaviour of a link task.
+        // TODO: Remove in 1.3.70.
+        if (!linkFromSources) {
+            languageSettings?.let {
+                addArgIfNotNull("-language-version", it.languageVersion)
+                addArgIfNotNull("-api-version", it.apiVersion)
+                it.enabledLanguageFeatures.forEach { featureName ->
+                    add("-XXLanguage:+$featureName")
+                }
+                it.experimentalAnnotationsInUse.forEach { annotationName ->
+                    add("-Xuse-experimental=$annotationName")
+                }
+            }
+        }
     }
 
     override fun buildSourceArgs(): List<String> {
