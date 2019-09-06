@@ -67,6 +67,7 @@ import org.jetbrains.kotlin.idea.core.script.ScriptDefinitionsManager
 import org.jetbrains.kotlin.idea.core.script.settings.KotlinScriptingSettings
 import org.jetbrains.kotlin.idea.core.util.toPsiFile
 import org.jetbrains.kotlin.idea.framework.KotlinSdkType
+import org.jetbrains.kotlin.idea.perf.Stats.Companion.runAndMeasure
 import org.jetbrains.kotlin.idea.project.getAndCacheLanguageLevelByDependencies
 import org.jetbrains.kotlin.idea.test.ConfigLibraryUtil
 import org.jetbrains.kotlin.idea.test.invalidateLibraryCache
