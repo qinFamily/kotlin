@@ -8,7 +8,10 @@ package org.jetbrains.kotlin.idea.testFramework
 import com.intellij.ide.impl.ProjectUtil
 import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode
+import com.intellij.openapi.externalSystem.service.project.manage.ExternalProjectsManagerImpl
+import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import org.jetbrains.plugins.gradle.service.project.open.attachGradleProjectAndRefresh
@@ -23,7 +26,18 @@ fun refreshGradleProject(projectPath: String, project: Project) {
     val projectSdk = ProjectRootManager.getInstance(project).projectSdk
     val gradleProjectSettings = GradleProjectSettings()
     setupGradleSettings(gradleProjectSettings, projectPath, project, projectSdk)
-    attachGradleProjectAndRefresh(gradleProjectSettings, project)
+    //attachGradleProjectAndRefresh(gradleProjectSettings, project)
+
+    val externalProjectPath = gradleProjectSettings.externalProjectPath
+    ExternalProjectsManagerImpl.getInstance(project).runWhenInitialized {
+        DumbService.getInstance(project).runWhenSmart {
+            ExternalSystemUtil.ensureToolWindowInitialized(project, GradleConstants.SYSTEM_ID)
+        }
+    }
+    ExternalProjectsManagerImpl.disableProjectWatcherAutoUpdate(project)
+    ExternalSystemApiUtil.getSettings(project, GradleConstants.SYSTEM_ID).linkProject(gradleProjectSettings)
+    ExternalSystemUtil.refreshProject(project, GradleConstants.SYSTEM_ID, externalProjectPath, true, ProgressExecutionMode.MODAL_SYNC)
+    ExternalSystemUtil.refreshProject(project, GradleConstants.SYSTEM_ID, externalProjectPath, false, ProgressExecutionMode.MODAL_SYNC)
     ProjectUtil.updateLastProjectLocation(projectPath)
 
     val gradleArguments = System.getProperty("kotlin.test.gradle.import.arguments")
