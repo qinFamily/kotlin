@@ -10,12 +10,22 @@ import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ProjectRootManager
+import org.jetbrains.plugins.gradle.service.project.open.attachGradleProjectAndRefresh
+import org.jetbrains.plugins.gradle.service.project.open.importProject
+import org.jetbrains.plugins.gradle.service.project.open.setupGradleSettings
+import org.jetbrains.plugins.gradle.settings.GradleProjectSettings
 import org.jetbrains.plugins.gradle.util.GradleConstants
-import java.io.File
-
-fun openProject(name: String, projectPath: String) = ProjectUtil.openOrImport(File(projectPath).canonicalPath, null, false)
+import org.jetbrains.plugins.gradle.util.GradleLog
 
 fun refreshGradleProject(projectPath: String, project: Project) {
+    GradleLog.LOG.info("Import project at $projectPath")
+    val projectSdk = ProjectRootManager.getInstance(project).projectSdk
+    val gradleProjectSettings = GradleProjectSettings()
+    setupGradleSettings(gradleProjectSettings, projectPath, project, projectSdk)
+    attachGradleProjectAndRefresh(gradleProjectSettings, project)
+    ProjectUtil.updateLastProjectLocation(projectPath)
+
     val gradleArguments = System.getProperty("kotlin.test.gradle.import.arguments")
     ExternalSystemUtil.refreshProjects(
         ImportSpecBuilder(project, GradleConstants.SYSTEM_ID)

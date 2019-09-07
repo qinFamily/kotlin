@@ -172,7 +172,7 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
             testName = "open project${if (note.isNotEmpty()) " $note" else ""}",
             test = {
                 val project = if (!simpleModule) {
-                    val project = openProject(name, path)
+                    val project = projectManagerEx.loadProject(name, path)
                     assertNotNull(project)
                     project
                 } else {
